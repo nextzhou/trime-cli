@@ -12,6 +12,7 @@ body:
     attributes:
       value: |
         如果你的问题和命令执行结果有关，请尽量带上完整命令、系统信息和报错输出。
+        如果你在 Windows 上使用，请明确说明你是在 WSL2 中运行，还是直接在原生 Windows 环境中运行。
   - type: textarea
     id: goal
     attributes:
@@ -25,7 +26,7 @@ body:
     attributes:
       label: 环境信息
       description: 操作系统、JDK、`librime` 来源等。
-      placeholder: macOS 15 / Temurin 17 / Homebrew librime
+      placeholder: Windows 11 + WSL2 Ubuntu 24.04 / Temurin 17 / apt librime-dev
     validations:
       required: true
   - type: textarea

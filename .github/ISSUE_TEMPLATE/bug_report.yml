@@ -12,6 +12,8 @@ body:
     attributes:
       value: |
         请尽量提供最小复现信息。对 `trime-cli` 来说，操作系统、JDK 版本、`librime` 来源和完整命令行都很关键。
+
+        如果你在 Windows 上使用，请明确说明你是在 WSL2 中运行，还是直接在原生 Windows 环境中运行。当前更推荐、也更容易复现的是 WSL2 + Ubuntu 24.04。
   - type: textarea
     id: summary
     attributes:
@@ -35,6 +37,8 @@ body:
       options:
         - macOS
         - Ubuntu 24.04
+        - Windows (WSL2)
+        - Windows (native)
         - Other Linux
         - Other
     validations:
@@ -50,8 +54,8 @@ body:
     id: librime_source
     attributes:
       label: librime 来源
-      description: 例如 Homebrew、apt、手动编译，或未安装。
-      placeholder: Homebrew librime / apt librime-dev / custom build
+      description: 例如 Homebrew、apt、WSL2 apt、手动编译，或未安装。
+      placeholder: Homebrew librime / apt librime-dev / WSL2 apt / custom build
     validations:
       required: true
   - type: dropdown
@@ -88,4 +92,4 @@ body:
     id: extra
     attributes:
       label: 其他信息
-      description: 例如是否设置了 `LIBRIME_PATH`，是否只在某个平台复现。
+      description: 例如是否设置了 `LIBRIME_PATH`、使用的是哪个 WSL 发行版、是否只在某个平台复现。
