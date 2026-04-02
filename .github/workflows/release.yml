@@ -32,18 +32,7 @@ jobs:
       - name: Build fat jar
         run: ./gradlew shadowJar
 
-      - name: Generate checksums
-        run: |
-          mkdir -p build/release
-          cp build/libs/trime-cli-all.jar build/release/
-          cd build/release
-          shasum -a 256 trime-cli-all.jar > SHA256SUMS
-          cp SHA256SUMS trime-cli-all.jar.sha256
-
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            build/release/trime-cli-all.jar
-            build/release/SHA256SUMS
-            build/release/trime-cli-all.jar.sha256
+          files: build/libs/trime-cli-all.jar
