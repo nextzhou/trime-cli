@@ -130,5 +130,17 @@ class RimeLibraryTest : BehaviorSpec({
                 println("librime loaded successfully from: ${RimeLibrary.findLibrimePath() ?: "dynamic linker"}")
             }
         }
+
+        `when`("called repeatedly after a successful load") {
+            then("reuses the same JNA proxy instance") {
+                if (!RimeLibrary.isAvailable()) {
+                    println("librime NOT available — skipping cache test")
+                    return@then
+                }
+                val first = RimeLibrary.load()
+                val second = RimeLibrary.load()
+                first shouldBe second
+            }
+        }
     }
 })

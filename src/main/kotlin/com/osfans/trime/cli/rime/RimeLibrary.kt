@@ -29,6 +29,8 @@ object RimeLibrary {
 
     private val logger = Logger.getLogger("trime-cli")
     private const val LINUX_LIBRARY_NAME = "rime"
+    @Volatile
+    private var cachedApi: RimeLibraryApi? = null
 
     private val MACOS_KNOWN_PATHS = listOf(
         "/opt/homebrew/opt/librime/lib/librime.dylib",
@@ -150,23 +152,29 @@ object RimeLibrary {
      * @throws IllegalStateException if librime is not found with install instructions
      */
     fun load(): RimeLibraryApi {
+        cachedApi?.let { return it }
+
         val osName = System.getProperty("os.name")
         val target =
             resolveLoadTarget(osName = osName)
                 ?: fallbackLibraryName(osName)
                 ?: throw IllegalStateException(missingLibraryMessage(osName))
 
-        return try {
-            if (target == LINUX_LIBRARY_NAME) {
-                logger.info("librime not found in known paths, falling back to dynamic linker lookup: $LINUX_LIBRARY_NAME")
+        synchronized(this) {
+            cachedApi?.let { return it }
+
+            return try {
+                if (target == LINUX_LIBRARY_NAME) {
+                    logger.info("librime not found in known paths, falling back to dynamic linker lookup: $LINUX_LIBRARY_NAME")
+                }
+                Native.load(target, RimeLibraryApi::class.java).also { cachedApi = it }
+            } catch (e: UnsatisfiedLinkError) {
+                throw IllegalStateException(
+                    "Failed to load librime from '${describeLoadTarget(target, osName)}': ${e.message}\n" +
+                        reinstallHint(osName),
+                    e,
+                )
             }
-            Native.load(target, RimeLibraryApi::class.java)
-        } catch (e: UnsatisfiedLinkError) {
-            throw IllegalStateException(
-                "Failed to load librime from '${describeLoadTarget(target, osName)}': ${e.message}\n" +
-                    reinstallHint(osName),
-                e,
-            )
         }
     }
 
