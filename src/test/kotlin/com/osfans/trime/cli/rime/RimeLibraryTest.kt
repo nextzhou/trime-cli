@@ -60,15 +60,14 @@ class RimeLibraryTest : BehaviorSpec({
         }
 
         `when`("no known Linux path exists") {
-            then("falls back to the dynamic linker library name") {
+            then("does not guess availability from the dynamic linker during detection") {
                 val target =
                     RimeLibrary.resolveLoadTarget(
                         envPath = null,
                         osName = "Linux",
                         pathExists = { false },
-                        libraryExists = { it == "rime" },
                     )
-                target shouldBe "rime"
+                target shouldBe null
             }
         }
 
@@ -79,9 +78,22 @@ class RimeLibraryTest : BehaviorSpec({
                         envPath = null,
                         osName = "Windows 11",
                         pathExists = { false },
-                        libraryExists = { false },
                     )
                 target shouldBe null
+            }
+        }
+    }
+
+    given("RimeLibrary.fallbackLibraryName") {
+        `when`("running on Linux") {
+            then("uses the generic librime soname as the final fallback") {
+                RimeLibrary.fallbackLibraryName("Linux") shouldBe "rime"
+            }
+        }
+
+        `when`("running on macOS") {
+            then("does not use a generic dynamic-linker fallback") {
+                RimeLibrary.fallbackLibraryName("Mac OS X") shouldBe null
             }
         }
     }

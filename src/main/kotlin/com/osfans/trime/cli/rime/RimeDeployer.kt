@@ -31,14 +31,6 @@ class RimeDeployer(
      * @throws IllegalStateException if librime is not installed
      */
     fun deployFromPath(configFilePath: File): File {
-        if (!RimeLibrary.isAvailable()) {
-            throw IllegalStateException(
-                RimeLibrary.missingLibraryMessage() +
-                    "\n\n" +
-                    "Alternatively, use --no-rime flag to skip RIME preprocessing.",
-            )
-        }
-
         val staging = Files.createTempDirectory("trime-cli-deploy").toFile()
         tempDir = staging
 

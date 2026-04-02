@@ -5,7 +5,6 @@ package com.osfans.trime.cli.rime
 
 import com.sun.jna.Library
 import com.sun.jna.Native
-import com.sun.jna.NativeLibrary
 import com.sun.jna.Pointer
 import java.io.File
 import java.util.logging.Logger
@@ -104,11 +103,6 @@ object RimeLibrary {
         envPath: String? = System.getenv("LIBRIME_PATH"),
         osName: String = System.getProperty("os.name"),
         pathExists: (String) -> Boolean = { File(it).exists() },
-        libraryExists: (String) -> Boolean = { libraryName ->
-            runCatching {
-                NativeLibrary.getInstance(libraryName).close()
-            }.isSuccess
-        },
     ): String? {
         envPath?.takeIf { it.isNotBlank() }?.let { candidate ->
             if (pathExists(candidate)) {
@@ -125,13 +119,15 @@ object RimeLibrary {
             }
         }
 
-        if (detectPlatform(osName) == HostPlatform.LINUX && libraryExists(LINUX_LIBRARY_NAME)) {
-            logger.info("librime not found in known paths, falling back to dynamic linker lookup: $LINUX_LIBRARY_NAME")
-            return LINUX_LIBRARY_NAME
-        }
-
         return null
     }
+
+    internal fun fallbackLibraryName(osName: String = System.getProperty("os.name")): String? =
+        if (detectPlatform(osName) == HostPlatform.LINUX) {
+            LINUX_LIBRARY_NAME
+        } else {
+            null
+        }
 
     private fun describeLoadTarget(
         target: String,
@@ -157,9 +153,13 @@ object RimeLibrary {
         val osName = System.getProperty("os.name")
         val target =
             resolveLoadTarget(osName = osName)
+                ?: fallbackLibraryName(osName)
                 ?: throw IllegalStateException(missingLibraryMessage(osName))
 
         return try {
+            if (target == LINUX_LIBRARY_NAME) {
+                logger.info("librime not found in known paths, falling back to dynamic linker lookup: $LINUX_LIBRARY_NAME")
+            }
             Native.load(target, RimeLibraryApi::class.java)
         } catch (e: UnsatisfiedLinkError) {
             throw IllegalStateException(
