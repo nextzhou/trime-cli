@@ -42,6 +42,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - **JRE 17+**（运行 fat JAR）
 - **macOS 或 Linux**
 - **官方验证平台**：macOS、Ubuntu 24.04
+- **Windows 用户**：推荐通过 WSL2 使用 Ubuntu 24.04，不建议把它当作原生 Windows 工具来使用
 - **librime**（可选，用于 `__include`/`__patch` 预处理）
 
 你也可以直接从 release 下载已构建好的 fat JAR：
@@ -60,6 +61,8 @@ sudo apt-get install -y librime-dev fonts-noto-cjk
 ```
 
 其他 Linux 发行版请通过系统包管理器安装 `librime`。如果安装在非标准路径，可通过 `LIBRIME_PATH` 指定 `librime.so`。
+
+如果你在 Windows 上使用，建议直接在 WSL2 中安装 Ubuntu 24.04，并按上面的 Ubuntu 步骤安装依赖。当前文档、CI 和已验证环境都以这条路径为准。
 
 如果不需要 `__include`/`__patch` 解析，可使用 `--no-rime` 跳过此依赖。
 
@@ -348,6 +351,28 @@ trime-cli report --width 1080 --density 2.75 my.trime.yaml -o report.html
 - Ubuntu 24.04：`sudo apt-get update && sudo apt-get install -y librime-dev fonts-noto-cjk`
 
 如果只是快速检查文件结构，可使用 `--no-rime` 跳过 librime 依赖，但 `__include`/`__patch` 引用的内容将不会被展开。
+
+---
+
+**Q: Windows 上怎么用？**
+
+推荐使用 WSL2，而不是直接在原生 Windows 环境里运行。
+
+建议路径：
+
+1. 在 Windows 中启用 WSL2
+2. 安装 Ubuntu 24.04
+3. 在 WSL2 里按 Linux 方式安装：
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y openjdk-17-jre librime-dev fonts-noto-cjk
+   ```
+4. 在 WSL2 里运行：
+   ```bash
+   java -jar trime-cli-all.jar --help
+   ```
+
+这样可以直接复用当前文档、CI 和官方验证环境；如果出现问题，也更容易复现和排查。
 
 ---
 

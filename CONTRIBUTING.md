@@ -12,6 +12,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - JDK 17
 - Git
 - macOS 或 Ubuntu 24.04
+- Windows 用户请优先使用 WSL2 + Ubuntu 24.04
 - `librime`
   - macOS: `brew install librime`
   - Ubuntu 24.04: `sudo apt-get update && sudo apt-get install -y librime-dev fonts-noto-cjk`

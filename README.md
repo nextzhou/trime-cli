@@ -18,6 +18,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - 实现语言：Kotlin / JVM
 - 运行方式：fat JAR
 - 官方验证平台：macOS、Ubuntu 24.04
+- Windows：推荐通过 WSL2（建议 Ubuntu 24.04）使用，不承诺原生 Windows 支持
 - 其他 Linux 发行版：最佳努力支持，可通过 `LIBRIME_PATH` 指定 `librime.so`
 - 许可证：GPL-3.0-or-later
 
@@ -44,6 +45,8 @@ brew install librime
 sudo apt-get update
 sudo apt-get install -y librime-dev fonts-noto-cjk
 ```
+
+如果你在 Windows 上使用，建议直接在 WSL2 中安装 Ubuntu 24.04，再按 Linux 方式运行 `trime-cli`。这样和当前 CI、文档以及官方验证环境保持一致，问题也更容易复现和排查。
 
 如果暂时不方便安装 `librime`，也可以使用 `--no-rime` 跳过 `__include` / `__patch` 预处理。
 
