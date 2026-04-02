@@ -20,9 +20,20 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - 当前重点平台：macOS
 - 许可证：GPL-3.0-or-later
 
+## 下载
+
+- 最新 release: <https://github.com/nextzhou/trime-cli/releases/latest>
+- 直接下载 fat JAR: <https://github.com/nextzhou/trime-cli/releases/latest/download/trime-cli-all.jar>
+
 ## 快速开始
 
-构建：
+直接运行：
+
+```bash
+java -jar trime-cli-all.jar --help
+```
+
+自行构建：
 
 ```bash
 ./gradlew shadowJar

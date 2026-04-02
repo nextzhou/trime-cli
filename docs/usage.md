@@ -43,6 +43,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
 - **macOS**（当前版本仅支持 macOS）
 - **librime**（可选，用于 `__include`/`__patch` 预处理）
 
+你也可以直接从 release 下载已构建好的 fat JAR：
+
+```text
+https://github.com/nextzhou/trime-cli/releases/latest/download/trime-cli-all.jar
+```
+
   ```bash
   # Apple Silicon 或 Intel Mac
   brew install librime
