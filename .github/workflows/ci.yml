@@ -12,7 +12,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-24.04
 
     steps:
       - name: Checkout
@@ -27,6 +33,16 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Install librime (macOS)
+        if: runner.os == 'macOS'
+        run: brew list librime >/dev/null 2>&1 || brew install librime
+
+      - name: Install librime and fonts (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librime-dev fonts-noto-cjk
+
       - name: Run tests
         run: ./gradlew test
 
@@ -39,7 +55,7 @@ jobs:
       - name: Smoke render
         run: |
           mkdir -p build/smoke
-          java -jar build/libs/trime-cli-all.jar render --no-rime src/test/resources/tongwenfeng.trime.yaml -o build/smoke
+          java -jar build/libs/trime-cli-all.jar render vendor/rime/shared/tongwenfeng.trime.yaml -o build/smoke
 
       - name: Smoke report
-        run: java -jar build/libs/trime-cli-all.jar report --no-rime src/test/resources/tongwenfeng.trime.yaml -o build/smoke/report.html
+        run: java -jar build/libs/trime-cli-all.jar report vendor/rime/shared/tongwenfeng.trime.yaml -o build/smoke/report.html

@@ -58,9 +58,6 @@ tasks.processResources {
 
 dependencies {
     implementation(libs.kaml)
-
-    implementation("org.jetbrains.skiko:skiko-awt-runtime-macos-arm64:0.8.18")
-    implementation("org.jetbrains.skiko:skiko-awt-runtime-macos-x64:0.8.18")
     implementation("net.java.dev.jna:jna:5.14.0")
 
     testImplementation(libs.kotest.runner.junit5)

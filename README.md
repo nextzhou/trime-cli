@@ -17,7 +17,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - 实现语言：Kotlin / JVM
 - 运行方式：fat JAR
-- 当前重点平台：macOS
+- 官方验证平台：macOS、Ubuntu 24.04
+- 其他 Linux 发行版：最佳努力支持，可通过 `LIBRIME_PATH` 指定 `librime.so`
 - 许可证：GPL-3.0-or-later
 
 ## 下载
@@ -32,6 +33,19 @@ SPDX-License-Identifier: GPL-3.0-or-later
 ```bash
 java -jar trime-cli-all.jar --help
 ```
+
+安装 `librime`：
+
+```bash
+# macOS
+brew install librime
+
+# Ubuntu 24.04
+sudo apt-get update
+sudo apt-get install -y librime-dev fonts-noto-cjk
+```
+
+如果暂时不方便安装 `librime`，也可以使用 `--no-rime` 跳过 `__include` / `__patch` 预处理。
 
 自行构建：
 
@@ -48,9 +62,9 @@ build/libs/trime-cli-all.jar
 示例：
 
 ```bash
-java -jar build/libs/trime-cli-all.jar validate --no-rime demo.trime.yaml
-java -jar build/libs/trime-cli-all.jar render --no-rime demo.trime.yaml -o /tmp/keyboards
-java -jar build/libs/trime-cli-all.jar report --no-rime demo.trime.yaml -o report.html
+java -jar build/libs/trime-cli-all.jar validate demo.trime.yaml
+java -jar build/libs/trime-cli-all.jar render demo.trime.yaml -o /tmp/keyboards
+java -jar build/libs/trime-cli-all.jar report demo.trime.yaml -o report.html
 ```
 
 完整使用说明见 [docs/usage.md](./docs/usage.md)。

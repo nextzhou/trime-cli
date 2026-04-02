@@ -7,16 +7,90 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
+import java.nio.file.Files
 
 class RimeLibraryTest : BehaviorSpec({
-    given("RimeLibrary.findLibrimePath") {
-        `when`("LIBRIME_PATH env var points to a non-existent file") {
-            then("returns null (env var override fails gracefully)") {
-                // We can't easily set env vars in tests, but we can test the path detection logic
-                val path = RimeLibrary.findLibrimePath()
-                // Either found or not — both are valid outcomes
-                println("librime path: ${path ?: "not found"}")
-                // No assertion — just verify it doesn't throw
+    given("RimeLibrary.detectPlatform") {
+        `when`("running on macOS") {
+            then("detects the macOS host platform") {
+                RimeLibrary.detectPlatform("Mac OS X") shouldBe RimeLibrary.HostPlatform.MACOS
+            }
+        }
+
+        `when`("running on Linux") {
+            then("detects the Linux host platform") {
+                RimeLibrary.detectPlatform("Linux") shouldBe RimeLibrary.HostPlatform.LINUX
+            }
+        }
+
+        `when`("running on other platforms") {
+            then("falls back to OTHER") {
+                RimeLibrary.detectPlatform("Windows 11") shouldBe RimeLibrary.HostPlatform.OTHER
+            }
+        }
+    }
+
+    given("RimeLibrary.resolveLoadTarget") {
+        `when`("LIBRIME_PATH points to an existing file") {
+            then("prefers the explicit override on any platform") {
+                val tempFile = Files.createTempFile("librime", ".so").toFile()
+                try {
+                    val target =
+                        RimeLibrary.resolveLoadTarget(
+                            envPath = tempFile.absolutePath,
+                            osName = "Linux",
+                        )
+                    target shouldBe tempFile.absolutePath
+                } finally {
+                    tempFile.delete()
+                }
+            }
+        }
+
+        `when`("a known macOS path exists") {
+            then("returns the first existing dylib path") {
+                val target =
+                    RimeLibrary.resolveLoadTarget(
+                        envPath = null,
+                        osName = "Mac OS X",
+                        pathExists = { it == "/usr/local/lib/librime.dylib" },
+                    )
+                target shouldBe "/usr/local/lib/librime.dylib"
+            }
+        }
+
+        `when`("no known Linux path exists") {
+            then("falls back to the dynamic linker library name") {
+                val target =
+                    RimeLibrary.resolveLoadTarget(
+                        envPath = null,
+                        osName = "Linux",
+                        pathExists = { false },
+                        libraryExists = { it == "rime" },
+                    )
+                target shouldBe "rime"
+            }
+        }
+
+        `when`("the platform is unsupported and no explicit path exists") {
+            then("returns null") {
+                val target =
+                    RimeLibrary.resolveLoadTarget(
+                        envPath = null,
+                        osName = "Windows 11",
+                        pathExists = { false },
+                        libraryExists = { false },
+                    )
+                target shouldBe null
+            }
+        }
+    }
+
+    given("RimeLibrary.installInstructions") {
+        `when`("formatting platform-specific install help") {
+            then("uses brew for macOS and apt for Linux") {
+                RimeLibrary.installInstructions("Mac OS X") shouldContain "brew install librime"
+                RimeLibrary.installInstructions("Linux") shouldContain "apt-get install -y librime-dev"
             }
         }
     }
@@ -26,26 +100,12 @@ class RimeLibraryTest : BehaviorSpec({
             then("returns a boolean without throwing") {
                 val available = RimeLibrary.isAvailable()
                 println("librime available: $available")
-                // No assertion — just verify it doesn't throw
             }
         }
     }
 
     given("RimeLibrary.load") {
-        `when`("librime is NOT installed") {
-            then("throws IllegalStateException with install instructions") {
-                if (RimeLibrary.isAvailable()) {
-                    println("librime IS available — skipping 'not installed' test")
-                    return@then
-                }
-                val exception = runCatching { RimeLibrary.load() }.exceptionOrNull()
-                exception shouldNotBe null
-                exception!!.message shouldContain "brew install librime"
-                println("Correctly got error: ${exception.message?.take(100)}")
-            }
-        }
-
-        `when`("librime IS installed") {
+        `when`("librime is installed on this system") {
             then("loads successfully and rime_get_api returns non-null") {
                 if (!RimeLibrary.isAvailable()) {
                     println("librime NOT available — skipping load test")
@@ -55,7 +115,7 @@ class RimeLibraryTest : BehaviorSpec({
                 lib shouldNotBe null
                 val apiPointer = runCatching { lib!!.rime_get_api() }.getOrNull()
                 apiPointer shouldNotBe null
-                println("librime loaded successfully from: ${RimeLibrary.findLibrimePath()}")
+                println("librime loaded successfully from: ${RimeLibrary.findLibrimePath() ?: "dynamic linker"}")
             }
         }
     }

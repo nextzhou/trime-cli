@@ -33,10 +33,8 @@ class RimeDeployer(
     fun deployFromPath(configFilePath: File): File {
         if (!RimeLibrary.isAvailable()) {
             throw IllegalStateException(
-                "librime not found. Please install it:\n" +
-                    "  macOS (Apple Silicon): brew install librime\n" +
-                    "  macOS (Intel):         brew install librime\n" +
-                    "  Or set LIBRIME_PATH=/path/to/librime.dylib\n\n" +
+                RimeLibrary.missingLibraryMessage() +
+                    "\n\n" +
                     "Alternatively, use --no-rime flag to skip RIME preprocessing.",
             )
         }

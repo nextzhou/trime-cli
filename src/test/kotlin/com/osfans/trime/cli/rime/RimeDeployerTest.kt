@@ -31,7 +31,7 @@ class RimeDeployerTest : BehaviorSpec({
                     val deployer = RimeDeployer()
                     shouldThrow<IllegalStateException> {
                         deployer.deployFromPath(tempFile)
-                    }.message shouldContain "brew install librime"
+                    }.message shouldContain "Please install it"
                 } finally {
                     tempFile.delete()
                 }
