@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2015 - 2026 Rime community
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+.gradle/
+build/
+out/
+*.iml
+.DS_Store

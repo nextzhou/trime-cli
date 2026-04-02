@@ -1,0 +1,30 @@
+#
+# SPDX-FileCopyrightText: 2015 - 2026 Rime community
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Upstream Sync
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-sync:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Check upstream sync
+        run: ./gradlew checkUpstreamSync

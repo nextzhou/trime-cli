@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2015 - 2026 Rime community
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# format:
+# kind | local path | upstream path (relative to upstream/trime) | mode
+#
+# first-stage policy:
+# only vendored runtime resources are checked automatically.
+# CLI source code is now maintained in this repository.
+
+resource | vendor/rime/prelude | app/data/rime/prelude | dir
+resource | vendor/rime/shared | app/src/main/assets/shared | root-yaml
+resource | vendor/rime/essay.txt | app/data/rime/essay/essay.txt | file

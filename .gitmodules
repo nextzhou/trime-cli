@@ -1,0 +1,3 @@
+[submodule "upstream/trime"]
+	path = upstream/trime
+	url = https://github.com/osfans/trime.git
