@@ -25,6 +25,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
 - 最新 release: <https://github.com/nextzhou/trime-cli/releases/latest>
 - 直接下载 fat JAR: <https://github.com/nextzhou/trime-cli/releases/latest/download/trime-cli-all.jar>
+- SHA256SUMS: <https://github.com/nextzhou/trime-cli/releases/latest/download/SHA256SUMS>
+- 单文件校验值: <https://github.com/nextzhou/trime-cli/releases/latest/download/trime-cli-all.jar.sha256>
 
 ## 快速开始
 

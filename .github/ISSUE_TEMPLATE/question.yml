@@ -1,0 +1,45 @@
+#
+# SPDX-FileCopyrightText: 2015 - 2026 Rime community
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Question
+description: 使用或集成相关的问题
+title: "[Question] "
+labels:
+  - question
+body:
+  - type: markdown
+    attributes:
+      value: |
+        如果你的问题和命令执行结果有关，请尽量带上完整命令、系统信息和报错输出。
+  - type: textarea
+    id: goal
+    attributes:
+      label: 你想完成什么
+      description: 先描述目标，再描述你卡住的点。
+      placeholder: 例如：我想在 CI 里批量校验多个 trime.yaml，并输出 HTML 报告。
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: 环境信息
+      description: 操作系统、JDK、`librime` 来源等。
+      placeholder: macOS 15 / Temurin 17 / Homebrew librime
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: 你已经尝试过什么
+      render: bash
+      placeholder: |
+        java -jar trime-cli-all.jar validate my.trime.yaml
+        java -jar trime-cli-all.jar report my.trime.yaml -o report.html
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息
+      description: 例如配置片段、日志、你预期的结果等。

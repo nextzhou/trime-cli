@@ -1,0 +1,91 @@
+#
+# SPDX-FileCopyrightText: 2015 - 2026 Rime community
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Bug report
+description: 报告一个可复现的问题
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请尽量提供最小复现信息。对 `trime-cli` 来说，操作系统、JDK 版本、`librime` 来源和完整命令行都很关键。
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题描述
+      description: 简要说明现象，以及你期望看到的结果。
+      placeholder: 例如：在 Ubuntu 24.04 上执行 report 时，CLI 在 deploy 阶段失败。
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: trime-cli 版本
+      description: 例如 v1.0.0，或 commit SHA。
+      placeholder: v1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: 操作系统
+      options:
+        - macOS
+        - Ubuntu 24.04
+        - Other Linux
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: java_version
+    attributes:
+      label: Java 版本
+      placeholder: openjdk 17.0.16
+    validations:
+      required: true
+  - type: input
+    id: librime_source
+    attributes:
+      label: librime 来源
+      description: 例如 Homebrew、apt、手动编译，或未安装。
+      placeholder: Homebrew librime / apt librime-dev / custom build
+    validations:
+      required: true
+  - type: dropdown
+    id: no_rime
+    attributes:
+      label: 是否使用 --no-rime
+      options:
+        - 是
+        - 否
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: 执行命令
+      render: bash
+      placeholder: java -jar trime-cli-all.jar report my.trime.yaml -o report.html
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: 最小复现配置
+      description: 如果可以，请贴出最小可复现的 `*.trime.yaml` 或相关片段。
+      render: yaml
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或报错输出
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: 其他信息
+      description: 例如是否设置了 `LIBRIME_PATH`，是否只在某个平台复现。

@@ -1,0 +1,9 @@
+#
+# SPDX-FileCopyrightText: 2015 - 2026 Rime community
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+blank_issues_enabled: true
+contact_links:
+  - name: 使用文档
+    url: https://github.com/nextzhou/trime-cli/blob/main/docs/usage.md
+    about: 先查看完整命令说明、平台支持和使用示例。
