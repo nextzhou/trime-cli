@@ -67,6 +67,12 @@ java -jar build/libs/trime-cli-all.jar render demo.trime.yaml -o /tmp/keyboards
 java -jar build/libs/trime-cli-all.jar report demo.trime.yaml -o report.html
 ```
 
+## 报告效果
+
+下面这张图是 `report` 命令生成的 `report.html` 首屏示意，使用的是仓库内置的默认共享主题 `vendor/rime/shared/trime.yaml`。
+
+![trime-cli report.html 首屏示意](./images/report-html-preview.png)
+
 完整使用说明见 [docs/usage.md](./docs/usage.md)。
 
 ## 与 Trime 的关系
