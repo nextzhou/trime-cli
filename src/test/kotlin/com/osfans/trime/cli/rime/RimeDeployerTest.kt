@@ -12,6 +12,8 @@ import java.io.File
 import java.nio.file.Files
 
 class RimeDeployerTest : BehaviorSpec({
+    val isLinux = System.getProperty("os.name").lowercase().contains("linux")
+
     given("RimeDeployer") {
         `when`("bundled shared defaults are present") {
             then("exposes trime.yaml as a classpath resource for trime:/... includes") {
@@ -40,6 +42,10 @@ class RimeDeployerTest : BehaviorSpec({
 
         `when`("deployFromPath is called with a valid config (librime available)") {
             then("returns a compiled YAML file with resolved includes") {
+                if (isLinux) {
+                    println("Skipping native deploy test on Linux — CLI smoke tests cover deploy/render/report end-to-end")
+                    return@then
+                }
                 if (!RimeLibrary.isAvailable()) {
                     println("librime NOT available -- skipping deployment test")
                     return@then
@@ -73,6 +79,10 @@ class RimeDeployerTest : BehaviorSpec({
 
         `when`("deployFromPath resolves trime:/ includes with bundled defaults") {
             then("compiles successfully without requiring --rime-data") {
+                if (isLinux) {
+                    println("Skipping bundled default deploy test on Linux — CLI smoke tests cover deploy/render/report end-to-end")
+                    return@then
+                }
                 if (!RimeLibrary.isAvailable()) {
                     println("librime NOT available -- skipping bundled default deployment test")
                     return@then

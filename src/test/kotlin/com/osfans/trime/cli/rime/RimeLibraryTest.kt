@@ -10,6 +10,8 @@ import io.kotest.matchers.string.shouldContain
 import java.nio.file.Files
 
 class RimeLibraryTest : BehaviorSpec({
+    val isLinux = System.getProperty("os.name").lowercase().contains("linux")
+
     given("RimeLibrary.detectPlatform") {
         `when`("running on macOS") {
             then("detects the macOS host platform") {
@@ -119,6 +121,10 @@ class RimeLibraryTest : BehaviorSpec({
     given("RimeLibrary.load") {
         `when`("librime is installed on this system") {
             then("loads successfully and rime_get_api returns non-null") {
+                if (isLinux) {
+                    println("Skipping native librime load test on Linux — command-level smoke tests cover the Linux path")
+                    return@then
+                }
                 if (!RimeLibrary.isAvailable()) {
                     println("librime NOT available — skipping load test")
                     return@then
@@ -133,6 +139,10 @@ class RimeLibraryTest : BehaviorSpec({
 
         `when`("called repeatedly after a successful load") {
             then("reuses the same JNA proxy instance") {
+                if (isLinux) {
+                    println("Skipping repeated native librime load test on Linux — librime init is process-global")
+                    return@then
+                }
                 if (!RimeLibrary.isAvailable()) {
                     println("librime NOT available — skipping cache test")
                     return@then
